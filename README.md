@@ -1,7 +1,11 @@
-# slurmlint
-Linter for Slurm Config Files
+![Travis CI Status](https://travis-ci.org/appeltel/slurmlint.svg?branch=master)
+![python 3.5, 3.6, 3.7](https://img.shields.io/badge/python-3.5%2C%203.6%2C%203.7-brightgreen.svg)
 
-# Hostname Lists
+# slurmlint
+
+Simple linter for Slurm Config Files
+
+## Hostname Lists
 
 This linter applies stricter rules than Slurm for lists of hostnames.
 Hostnames must be valid hostnames according to
