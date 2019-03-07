@@ -7,9 +7,13 @@ import re
 RE_ISNUM = re.compile('[0-9]+')
 
 
-def _expand_numlist(raw):
+def expand_numlist(raw):
     """
     Expand a comma-delimited list of numbers and/or numeric ranges
+
+    :param str raw: String containing list of numbers to be expanded
+    :returns: List of expanded numbers
+    :rtype: list(str)
     """
     result = []
     for item in raw.split(','):
