@@ -9,3 +9,6 @@ def test_expand_numlist():
         '05', '06', '07', '009', '010', '011', '012', '013', '04', '4'
     ]
     assert hosts.expand_numlist('05-07,009-13,04,4') == expected
+
+    expected = ['5', '123', '5017', '5018', '5019']
+    assert hosts.expand_numlist('5,123,5017-5019') == expected
