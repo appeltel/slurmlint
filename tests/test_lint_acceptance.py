@@ -27,4 +27,4 @@ def test_lint_conf_file(conf, data):
         return
 
     eline_expected = int(conf.split('-')[1])
-    assert result['errors'][1][0] == eline_expected
+    assert result['errors'][0][0] == eline_expected
