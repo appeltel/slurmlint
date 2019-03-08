@@ -1,8 +1,6 @@
 """
 This is the linter
 """
-from io import StringIO
-
 from slurmlint.hosts import expand_hostlist
 
 
@@ -266,7 +264,7 @@ class _SlurmLinter:
         except Exception:
             self.results['errors'].append(
                 (idx, 'Invalid NodeName directive')
-        )
+            )
         if len(self.results['nodes']) != len(set(self.results['nodes'])):
             self.results['errors'].append(
                 (idx, 'Duplicate nodes defined')

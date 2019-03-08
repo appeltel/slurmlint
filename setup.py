@@ -37,7 +37,7 @@ setup(
     url=URL,
     packages=find_packages(exclude=('tests',)),
     entry_points={
-        'console_scripts': [],
+        'console_scripts': ['slurmlint=slurmlint.cli:cli',],
     },
     install_requires=REQUIRED,
     include_package_data=True,
