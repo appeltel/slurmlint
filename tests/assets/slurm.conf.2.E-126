@@ -1,0 +1,138 @@
+ClusterName=ringo
+ControlMachine=sched-1,sched-2
+ControlAddr=sched-drbd
+SlurmUser=slurm
+#
+AuthType=auth/munge
+CryptoType=crypto/munge
+ProctrackType=proctrack/cgroup
+TaskPlugin=task/affinity,task/cgroup
+MemLimitEnforce=no
+JobAcctGatherParams=NoOverMemoryKill
+#
+SlurmctldPidFile=/var/run/slurmctld.pid
+SlurmdPidFile=/var/run/slurmd.pid
+SlurmdSpoolDir=/var/spool/slurmd.%n
+PluginDir=/usr/lib64/slurm
+SlurmctldPort=5012
+SlurmdPort=5013
+StateSaveLocation=/drbd/slurm/state
+#
+MaxJobCount=150000
+MaxArraySize=30000
+EnforcePartLimits=YES
+GresTypes=gpu
+#
+MpiDefault=none
+#
+#UsePAM=1
+PropagateResourceLimitsExcept=ALL
+RebootProgram=/sbin/reboot
+ReturnToService=1
+SallocDefaultCommand="srun --mem-per-cpu=0 --pty $SHELL"
+#
+# PROLOG SCRIPTS
+#
+Prolog=/etc/slurm/prologs.d/*
+PrologFlags=Alloc,Contain
+#
+# ACCRE'S PLUGINS
+#
+JobSubmitPlugins=lua
+#
+# TIMERS
+#
+SlurmctldTimeout=300
+SlurmdTimeout=300
+BatchStartTimeout=230
+InactiveLimit=0
+MinJobAge=150
+KillWait=30
+Waittime=0
+UnkillableStepTimeout=300
+MessageTimeout=20
+#
+# SCHEDULING
+#
+FastSchedule=1
+SchedulerType=sched/backfill
+SelectType=select/cons_res
+SelectTypeParameters=CR_Core_Memory
+SchedulerParameters=bf_interval=120,bf_continue,bf_resolution=600,bf_max_job_test=4000,bf_max_job_user_part=20,bf_window=20160,max_sched_time=2,nohold_on_prolog_fail,bf_busy_nodes,bf_job_part_count_reserve=30,bf_max_job_array_resv=5
+PreemptType=preempt/qos
+PreemptMode=CANCEL
+#
+# PRIORITY
+#
+PriorityType=priority/multifactor
+PriorityWeightAge=25000
+PriorityWeightFairshare=100000
+PriorityWeightJobSize=1000
+PriorityWeightQOS=100000000
+PriorityDecayHalfLife=2-0
+PriorityMaxAge=14-0
+PriorityUsageResetPeriod=NONE
+#
+# ACCOUNTING
+#
+AccountingStorageHost=sched-drbd
+AccountingStorageType=accounting_storage/slurmdbd
+AccountingStorageEnforce=safe,qos
+AccountingStorageUser=slurm
+AccountingStoreJobComment=YES
+AccountingStorageTRES=gres/gpu
+JobAcctGatherType=jobacct_gather/cgroup
+#
+# LOGGING
+#
+SlurmctldDebug=verbose
+SlurmdDebug=verbose
+SlurmctldLogFile=/var/log/slurm/slurmctld.log
+SlurmdLogFile=/var/log/slurm/slurmd.log
+#
+# COMPUTE NODES
+#
+NodeName=cn[201-216] Sockets=2 CoresPerSocket=6 ThreadsPerCore=2 CPUs=12 RealMemory=48114 MemSpecLimit=5120 Weight=1 Feature=westmere
+NodeName=cn[217-238] Sockets=2 CoresPerSocket=4 ThreadsPerCore=2 CPUs=8 RealMemory=128749 MemSpecLimit=5120 Weight=50 Feature=westmere
+NodeName=cn[301-303,305-340,347-380,383-415,417-421,423-448,450-460,464-500] Sockets=2 CoresPerSocket=6 ThreadsPerCore=2 CPUs=12 RealMemory=128714 MemSpecLimit=5120 Weight=30 Feature=sandybridge
+NodeName=cn[381-382,422,461-463] Sockets=2 CoresPerSocket=6 ThreadsPerCore=2 CPUs=12 RealMemory=257730 MemSpecLimit=5120 Weight=90 Feature=sandybridge
+NodeName=cn[304,416,449] Sockets=2 CoresPerSocket=6 ThreadsPerCore=2 CPUs=12 RealMemory=96460 MemSpecLimit=5120 Weight=1 Feature=sandybridge
+NodeName=cn[903-905] Sockets=2 CoresPerSocket=8 ThreadsPerCore=2 CPUs=16 RealMemory=128714 MemSpecLimit=5120 Weight=10 Feature=sandybridge
+NodeName=cn[911-913,1081-1096,1121-1135] Sockets=2 CoresPerSocket=6 ThreadsPerCore=2 CPUs=12 RealMemory=64206 MemSpecLimit=5120 Weight=1 Feature=sandybridge
+NodeName=cn[1101] Sockets=2 CoresPerSocket=6 ThreadsPerCore=2 CPUs=12 RealMemory=64241 MemSpecLimit=5120 Weight=1 Feature=westmere
+NodeName=cn[1201-1242,1257] Sockets=2 CoresPerSocket=6 ThreadsPerCore=2 CPUs=12 RealMemory=128650 MemSpecLimit=5120 Weight=40 Feature=haswell
+NodeName=cn[1258,1260,1261,1263,1266-1271,1273-1279,1284-1287,1289-1292,1303-1321,1331-1354,1367-1369,1372-1377,1388-1427] Sockets=2 CoresPerSocket=8 ThreadsPerCore=2 CPUs=16 RealMemory=128518 MemSpecLimit=5120 Weight=20 Feature=haswell
+NodeName=cn[1259,1262,1264,1265,1272,1280-1283,1288,1293-1302,1322-1330,1355-1366,1370,1371,1378-1387] Sockets=2 CoresPerSocket=8 ThreadsPerCore=2 CPUs=16 RealMemory=257662 MemSpecLimit=5120 Weight=70 Feature=haswell
+NodeName=cn[1430-1481] Sockets=2 CoresPerSocket=12 ThreadsPerCore=2 CPUs=24 RealMemory=128394 MemSpecLimit=5120 Weight=60 Feature=skylake
+NodeName=cn[1482-1527] Sockets=2 CoresPerSocket=8 ThreadsPerCore=2 CPUs=16 RealMemory=257410 MemSpecLimit=5120 Weight=80 Feature=skylake
+NodeName=cn[1528-1529] Sockets=2 CoresPerSocket=8 ThreadsPerCore=2 CPUs=16 RealMemory=257346 MemSpecLimit=5120 Weight=80 Feature=skylake
+#
+# GPU NODES
+#
+NodeName=gpu[0001-0005,0007-0012] Sockets=2 CoresPerSocket=6 ThreadsPerCore=1 CPUs=12 RealMemory=128644 MemSpecLimit=5120 Gres=gpu:4 Weight=1 Feature=haswell,maxwell
+NodeName=gpu[0006] Sockets=2 CoresPerSocket=6 ThreadsPerCore=1 CPUs=12 RealMemory=128644 MemSpecLimit=5120 Gres=gpu:4 Weight=100 Feature=haswell,maxwell
+NodeName=gpu[0013-0021] Sockets=2 CoresPerSocket=4 ThreadsPerCore=1 CPUs=8 RealMemory=257657 MemSpecLimit=5120 Gres=gpu:4 Weight=1 Feature=broadwell,pascal,p3584
+NodeName=gpu[0023-0034] Sockets=2 CoresPerSocket=4 ThreadsPerCore=1 CPUs=8 RealMemory=257657 MemSpecLimit=5120 Gres=gpu:4 Weight=1 Feature=broadwell,pascal,p3840
+NodeName=gpu[0022] Sockets=2 CoresPerSocket=4 ThreadsPerCore=1 CPUs=8 RealMemory=257657 MemSpecLimit=5120 Gres=gpu:4 Weight=100 Feature=broadwell,pascal,p3584
+#
+# NOGPFS NODES
+#
+NodeName=ng[239] Sockets=2 CoresPerSocket=6 ThreadsPerCore=2 CPUs=12 RealMemory=128714 MemSpecLimit=2048 Weight=1 Feature=sandybridge
+NodeName=ng[671-673,675-677] Sockets=2 CoresPerSocket=4 ThreadsPerCore=2 CPUs=8 RealMemory=48119 MemSpecLimit=2048 Weight=1 Feature=nehalem
+NodeName=ng[674] Sockets=2 CoresPerSocket=4 ThreadsPerCore=2 CPUs=8 RealMemory=40055 MemSpecLimit=2048 Weight=1 Feature=nehalem
+NodeName=ng[667-670,678-690] Sockets=2 CoresPerSocket=4 ThreadsPerCore=2 CPUs=8 RealMemory=23928 MemSpecLimit=2048 Weight=1 Feature=nehalem
+NodeName=ng[691-694] Sockets=2 CoresPerSocket=4 ThreadsPerCore=2 CPUs=8 RealMemory=96499 MemSpecLimit=2048 Weight=1 Feature=nehalem
+NodeName=ng[908-910,1001-1031,1032-1040] Sockets=2 CoresPerSocket=4 ThreadsPerCore=2 CPUs=8 RealMemory=23923 MemSpecLimit=2048 Weight=1 Feature=westmere
+NodeName=ng[1031] Sockets=2 CoresPerSocket=4 ThreadsPerCore=2 CPUs=8 RealMemory=19894 MemSpecLimit=2048 Weight=1 Feature=westmere # Duplicate entry for cn1031
+NodeName=ng[1041-1044,1046-1059] Sockets=2 CoresPerSocket=6 ThreadsPerCore=2 CPUs=12 RealMemory=48114 MemSpecLimit=2048 Weight=1 Feature=westmere
+NodeName=ng[1061-1080] Sockets=2 CoresPerSocket=4 ThreadsPerCore=2 CPUs=8 RealMemory=23923 MemSpecLimit=2048 Weight=1 Feature=westmere 
+NodeName=ng[1097-1100,1102-1120] Sockets=2 CoresPerSocket=6 ThreadsPerCore=2 CPUs=12 RealMemory=64241 MemSpecLimit=2048 Weight=1 Feature=westmere 
+NodeName=ng[1255-1256] Sockets=2 CoresPerSocket=6 ThreadsPerCore=2 CPUs=12 RealMemory=128714 MemSpecLimit=2048 Weight=1 Feature=sandybridge
+#
+# PARTITIONS
+#
+PartitionName=production Nodes=cn[201-238,301-340,347-370,372-500,903-905,911-913,1081-1096,1121-1135,1201-1230,1232-1242,1257-1427,1430-1524,1526-1529] DefaultTime=30 MaxTime=20160 DefMemPerCPU=1024 MaxMemPerCPU=20480 PriorityTier=1 Default=YES DisableRootJobs=YES State=UP
+PartitionName=nogpfs Nodes=ng[239,667-694,908-910,1001-1044,1046-1059,1061-1080,1097-1100,1102-1120,1255-1256] DefaultTime=30 MaxTime=20160 DefMemPerCPU=1024 MaxMemPerCPU=20480 PriorityTier=2 Default=NO DisableRootJobs=YES State=UP QOS=nogpfs
+PartitionName=debug Nodes=cn[371,1101,1231,1525],gpu[0006,0022] QOS=debug DefaultTime=10 DefMemPerCPU=1024 MaxMemPerCPU=20480 PriorityTier=4 Default=NO DisableRootJobs=YES State=UP
+PartitionName=maxwell Nodes=gpu[0001-0012] DefaultTime=30 MaxTime=7200 DefMemPerCPU=1024 MaxMemPerCPU=10200 PriorityTier=3 Default=NO DisableRootJobs=YES State=UP
+PartitionName=pascal Nodes=gpu[0013-0034] DefaultTime=30 MaxTime=7200 DefMemPerCPU=1024 MaxMemPerCPU=31500 PriorityTier=3 Default=NO DisableRootJobs=YES State=UP
