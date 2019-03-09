@@ -103,7 +103,7 @@ NodeName=cn[911-913,1081-1096,1121-1135] Sockets=2 CoresPerSocket=6 ThreadsPerCo
 NodeName=cn[1101] Sockets=2 CoresPerSocket=6 ThreadsPerCore=2 CPUs=12 RealMemory=64241 MemSpecLimit=5120 Weight=1 Feature=westmere
 NodeName=cn[1201-1242,1257] Sockets=2 CoresPerSocket=6 ThreadsPerCore=2 CPUs=12 RealMemory=128650 MemSpecLimit=5120 Weight=40 Feature=haswell
 NodeName=cn[1258,1260,1261,1263,1266-1271,1273-1279,1284-1287,1289-1292,1303-1321,1331-1354,1367-1369,1372-1377,1388-1427] Sockets=2 CoresPerSocket=8 ThreadsPerCore=2 CPUs=16 RealMemory=128518 MemSpecLimit=5120 Weight=20 Feature=haswell
-NodeName=cn[1259,1262,1264,1265,1262,1272,1280-1283,1288,1293-1302,1322-1330,1355-1366,1370,1371,1378-1387] Sockets=2 CoresPerSocket=8 ThreadsPerCore=2 CPUs=16 RealMemory=257662 MemSpecLimit=5120 Weight=70 Feature=haswell # duplicate node 162
+NodeName=cn[1259,1262,1264,1265,1262,1272,1280-1283,1288,1293-1302,1322-1330,1355-1366,1370,1371,1378-1387] Sockets=2 CoresPerSocket=8 ThreadsPerCore=2 CPUs=16 RealMemory=257662 MemSpecLimit=5120 Weight=70 Feature=haswell # duplicate node 1262
 NodeName=cn[1430-1481] Sockets=2 CoresPerSocket=12 ThreadsPerCore=2 CPUs=24 RealMemory=128394 MemSpecLimit=5120 Weight=60 Feature=skylake
 NodeName=cn[1482-1527] Sockets=2 CoresPerSocket=8 ThreadsPerCore=2 CPUs=16 RealMemory=257410 MemSpecLimit=5120 Weight=80 Feature=skylake
 NodeName=cn[1528-1529] Sockets=2 CoresPerSocket=8 ThreadsPerCore=2 CPUs=16 RealMemory=257346 MemSpecLimit=5120 Weight=80 Feature=skylake

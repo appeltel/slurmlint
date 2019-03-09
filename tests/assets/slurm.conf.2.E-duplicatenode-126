@@ -1,4 +1,4 @@
-# Errors 127,128,131
+# Errors 126,127
 ClusterName=ringo
 ControlMachine=sched-1,sched-2
 ControlAddr=sched-drbd
@@ -123,12 +123,12 @@ NodeName=ng[671-673,675-677] Sockets=2 CoresPerSocket=4 ThreadsPerCore=2 CPUs=8 
 NodeName=ng[674] Sockets=2 CoresPerSocket=4 ThreadsPerCore=2 CPUs=8 RealMemory=40055 MemSpecLimit=2048 Weight=1 Feature=nehalem
 NodeName=ng[667-670,678-690] Sockets=2 CoresPerSocket=4 ThreadsPerCore=2 CPUs=8 RealMemory=23928 MemSpecLimit=2048 Weight=1 Feature=nehalem
 NodeName=ng[691-694] Sockets=2 CoresPerSocket=4 ThreadsPerCore=2 CPUs=8 RealMemory=96499 MemSpecLimit=2048 Weight=1 Feature=nehalem
-NodeName=ng[908-910,1001-1031,1032-1040] Sockets=2 CoresPerSocket=4 ThreadsPerCore=2 CPUs=8 RealMemory=23923 MemSpecLimit=2048 Weight=1 Feature=westmere
+NodeName=ng[908-910,1001-1031,1032-1040] Sockets=2 CoresPerSocket=4 ThreadsPerCore=2 CPUs=8 RealMemory=23923 MemSpecLimit=2048 Weight=1 Feature=westmere # Duplicate entry for cn1031
 NodeName=ng[1031] Sockets=2 CoresPerSocket=4 ThreadsPerCore=2 CPUs=8 RealMemory=19894 MemSpecLimit=2048 Weight=1 Feature=westmere # Duplicate entry for cn1031
-NodeName=ng[908-910,1041-1044,1046-1059] Sockets=2 CoresPerSocket=6 ThreadsPerCore=2 CPUs=12 RealMemory=48114 MemSpecLimit=2048 Weight=1 Feature=westmere # Duplicate entries for ng908-910
+NodeName=ng[1041-1044,1046-1059] Sockets=2 CoresPerSocket=6 ThreadsPerCore=2 CPUs=12 RealMemory=48114 MemSpecLimit=2048 Weight=1 Feature=westmere
 NodeName=ng[1061-1080] Sockets=2 CoresPerSocket=4 ThreadsPerCore=2 CPUs=8 RealMemory=23923 MemSpecLimit=2048 Weight=1 Feature=westmere 
 NodeName=ng[1097-1100,1102-1120] Sockets=2 CoresPerSocket=6 ThreadsPerCore=2 CPUs=12 RealMemory=64241 MemSpecLimit=2048 Weight=1 Feature=westmere 
-NodeName=ng[1255-1256,1256,1259] Sockets=2 CoresPerSocket=6 ThreadsPerCore=2 CPUs=12 RealMemory=128714 MemSpecLimit=2048 Weight=1 Feature=sandybridge # duplicate nodes 1256 and 1259
+NodeName=ng[1255-1256] Sockets=2 CoresPerSocket=6 ThreadsPerCore=2 CPUs=12 RealMemory=128714 MemSpecLimit=2048 Weight=1 Feature=sandybridge
 #
 # PARTITIONS
 #

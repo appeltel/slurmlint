@@ -1,7 +1,7 @@
 """
 This is the linter
 """
-from collections import Counter
+from collections import Counter, defaultdict
 
 from slurmlint.hosts import expand_hostlist
 
@@ -234,9 +234,10 @@ class _SlurmLinter:
     Lints a slurm file text
     """
     def __init__(self):
-        self.results = {'errors': [], 'nodes': set()}
-        self.in_partition = set()
-        # generic dispatch for parameters
+        self.results = {'errors': []}
+        self.nb = NodeBank()
+
+        #set generic dispatch for parameters
         self.dispatch = {param: self._generic_line for param in ALLOWED_PARAMS}
         # special functions for important parameters
         self.dispatch['nodename'] = self._nodename_line
@@ -255,28 +256,24 @@ class _SlurmLinter:
                 continue
             self.dispatch[param](idx, line)
 
+        self.results['errors'].extend(self.nb.duplicate_definition_errors())
+        self.results['errors'].sort()
+        self.results['nodes'] = [node for node in self.nb]
+        self.results['nodes'].sort()
+
         return self.results
 
     def _nodename_line(self, idx, line):
-        dupes = set()
         try:
             args = line.split()
             nodelist = args[0].split('=')[1]
             nodes = expand_hostlist(nodelist)
-            dupes.update(
-                [n for n, count in Counter(nodes).items() if count > 1]
-            )
-            dupes.update(set(nodes).intersection(self.results['nodes']))
-            self.results['nodes'].update(nodes)
+            for node in nodes:
+                self.nb[node].add_def(idx)
         #except Exception:
         except RuntimeError:
             self.results['errors'].append(
                 (idx, 'Invalid NodeName directive')
-            )
-
-        if dupes:
-            self.results['errors'].append(
-                (idx, 'Duplicate nodes defined: {0}'.format(', '.join(dupes)))
             )
 
     def _generic_line(self, idx, line):
@@ -287,3 +284,106 @@ class _SlurmLinter:
 
     def _partitionname_line(self, idx, line):
         pass
+
+
+class Node:
+    """
+    Record of a node defined (or not defined) in a slurm file
+    containing the line numbers where it is defined, and the partitions
+    that it is in with the line definition of those partitions.
+    """
+    def __init__(self, name):
+        self.name = name
+        self.deflines = []
+        self.partitions = {}
+
+    def __str__(self):
+        return self.name
+
+    def __lt__(self, other):
+        return str(self) < str(other)
+
+    def add_def(self, line):
+        """
+        Add a node definition for the given line
+        """
+        self.deflines.append(line)
+
+    def add_partition(self, partition, line):
+        """
+        Add a partition for the node at the specified line
+        """
+        if partition not in self.partitions:
+            self.partitions[partition] = [line]
+        else:
+            self.partitions[partition].append(line)
+
+
+class NodeBank(dict):
+    """
+    a NodeBank keeps track of all Nodes encountered in the
+    slurm config and works like a defaultdict, automatically
+    creating nodes encountered for easy updated. This also
+    tracks global information affecting all node records
+    such as ALL partitions.
+
+    Also provide error reporting for all nodes defined that
+    are either missing partitions or are defined multiple
+    times.
+    """
+    def __init__(self):
+        super().__init__()
+
+        self.all_partitions = {}
+
+    def __missing__(self, key):
+        if key not in self:
+            self[key] = Node(key)
+        return self[key]
+
+    def undefined_node_errors(self):
+        """
+        Report all errors in the form of a list of tuples with line number
+        and error messages for nodes that were added to partitions but not
+        defined.
+        """
+        errlines = defaultdict(list)
+        for nodename in self:
+            node = self[nodename]
+            if node.partitions and not node.deflines:
+                for lines in node.partitions.values():
+                    for line in lines:
+                        errlines[line].append(node)
+        result = []
+        for line, nodes in errlines.items():
+            msg_nodes = ', '.join([str(node) for node in sorted(nodes)[:3]])
+            if len(nodes) > 3:
+                msg_nodes += ', ...'
+            msg = 'Undefined nodes added to partition: {0}'.format(msg_nodes)
+            result.append((line, msg))
+
+        result.sort()
+        return result
+
+    def duplicate_definition_errors(self):
+        """
+        Report all errors in the form of a list of tuples with line number
+        and error messages for nodes that were defined multiple times.
+        """
+        errlines = defaultdict(list)
+        for nodename in self:
+            node = self[nodename]
+            if len(node.deflines) > 1:
+                for line in set(node.deflines):
+                    errlines[line].append(node)
+
+        result = []
+        for line, nodes in errlines.items():
+            msg_nodes = ', '.join([str(node) for node in sorted(nodes)[:3]])
+            if len(nodes) > 3:
+                msg_nodes += ', ...'
+            msg = 'Duplicate node definition: {0}'.format(msg_nodes)
+            result.append((line, msg))
+
+        result.sort()
+        return result
