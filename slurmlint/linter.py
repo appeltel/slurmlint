@@ -1,6 +1,8 @@
 """
 This is the linter
 """
+from collections import Counter
+
 from slurmlint.hosts import expand_hostlist
 
 
@@ -232,7 +234,7 @@ class _SlurmLinter:
     Lints a slurm file text
     """
     def __init__(self):
-        self.results = {'errors': [], 'nodes': []}
+        self.results = {'errors': [], 'nodes': set()}
         self.in_partition = set()
         # generic dispatch for parameters
         self.dispatch = {param: self._generic_line for param in ALLOWED_PARAMS}
@@ -256,18 +258,25 @@ class _SlurmLinter:
         return self.results
 
     def _nodename_line(self, idx, line):
+        dupes = set()
         try:
             args = line.split()
             nodelist = args[0].split('=')[1]
             nodes = expand_hostlist(nodelist)
-            self.results['nodes'].extend(nodes)
-        except Exception:
+            dupes.update(
+                [n for n, count in Counter(nodes).items() if count > 1]
+            )
+            dupes.update(set(nodes).intersection(self.results['nodes']))
+            self.results['nodes'].update(nodes)
+        #except Exception:
+        except RuntimeError:
             self.results['errors'].append(
                 (idx, 'Invalid NodeName directive')
             )
-        if len(self.results['nodes']) != len(set(self.results['nodes'])):
+
+        if dupes:
             self.results['errors'].append(
-                (idx, 'Duplicate nodes defined')
+                (idx, 'Duplicate nodes defined: {0}'.format(', '.join(dupes)))
             )
 
     def _generic_line(self, idx, line):

@@ -2,8 +2,13 @@
 Acceptance tests for the linter against real slurm.conf files
 
 confing files should be placed in the assets directory and be named in the
-form "slurm.conf.X.E-Y" if the first error is on the Yth line, or
-"slurm.conf.X.OK" if there are no errors.
+form "slurm.conf.X.E-DESC-LINENO" if there are errors, or
+"slurm.conf.X.OK" if there are no errors. "DESC" should be a one-word
+description of the error and "LINENO" the number of the first line that
+has an error.
+
+If there are errors, the first line of the slurm conf should
+be a comment that ends with a comma delimited list of lines with errors.
 """
 import os
 
@@ -26,5 +31,7 @@ def test_lint_conf_file(conf, data):
         assert result['errors'] == []
         return
 
-    eline_expected = int(conf.split('-')[1])
-    assert result['errors'][0][0] == eline_expected
+    errors_in = data.splitlines()[0].split()[-1]
+    eline_expected = [int(item) for item in errors_in.split(',')]
+    eline_result = [item[0] for item in result['errors']]
+    assert  eline_result == eline_expected
