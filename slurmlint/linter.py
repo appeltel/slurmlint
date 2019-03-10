@@ -270,10 +270,9 @@ class _SlurmLinter:
             nodes = expand_hostlist(nodelist)
             for node in nodes:
                 self.nb[node].add_def(idx)
-        #except Exception:
-        except RuntimeError:
+        except Exception:
             self.results['errors'].append(
-                (idx, 'Invalid NodeName directive')
+                (idx, 'Syntax Error in NodeName directive')
             )
 
     def _generic_line(self, idx, line):
