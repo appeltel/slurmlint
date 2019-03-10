@@ -334,7 +334,7 @@ class NodeBank(dict):
     def __init__(self):
         super().__init__()
 
-        self.all_partitions = {}
+        self.allnode_partitions = set()
 
     def __missing__(self, key):
         if key not in self:
@@ -383,6 +383,32 @@ class NodeBank(dict):
             if len(nodes) > 3:
                 msg_nodes += ', ...'
             msg = 'Duplicate node definition: {0}'.format(msg_nodes)
+            result.append((line, msg))
+
+        result.sort()
+        return result
+
+    def node_missing_partition_errors(self):
+        """
+        Report all errors in the form of a list of tuples with line number
+        and error messages for nodes that were defined but not added to
+        a partition.
+        """
+        if self.allnode_partitions:
+            return []
+
+        errlines = defaultdict(list)
+        for nodename in self:
+            node = self[nodename]
+            if node.deflines and not node.partitions:
+                for line in node.deflines:
+                    errlines[line].append(node)
+        result = []
+        for line, nodes in errlines.items():
+            msg_nodes = ', '.join([str(node) for node in sorted(nodes)[:3]])
+            if len(nodes) > 3:
+                msg_nodes += ', ...'
+            msg = 'Defined node has no partition: {0}'.format(msg_nodes)
             result.append((line, msg))
 
         result.sort()

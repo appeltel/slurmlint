@@ -66,3 +66,25 @@ def test_nodebank_duplicate_definition_errors_sameline():
         (12, 'Duplicate node definition: cn1'),
     ]
     assert result == expected
+
+
+def test_nodebank_node_missing_partition_errors():
+    nb = linter.NodeBank()
+    nb['cn1'].add_def(11)
+    nb['cn2'].add_def(11)
+    nb['cn3'].add_def(12)
+    nb['cn4'].add_def(12)
+    nb['cn5'].add_def(12)
+    nb['cn6'].add_def(12)
+    nb['cn7'].add_def(12)
+    nb['cn8'].add_def(12)
+
+    nb['cn1'].add_partition('prod', 15)
+    nb['cn4'].add_partition('prod', 15)
+
+    result = nb.node_missing_partition_errors()
+    expected = [
+        (11, 'Defined node has no partition: cn2'),
+        (12, 'Defined node has no partition: cn3, cn5, cn6, ...')
+    ]
+    assert result == expected
