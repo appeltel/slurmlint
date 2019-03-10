@@ -257,9 +257,14 @@ class _SlurmLinter:
             self.dispatch[param](idx, line)
 
         self.results['errors'].extend(self.nb.duplicate_definition_errors())
+        self.results['errors'].extend(self.nb.undefined_node_errors())
+        self.results['errors'].extend(
+            self.nb.node_missing_partition_errors()
+        )
         self.results['errors'].sort()
         self.results['nodes'] = [node for node in self.nb]
         self.results['nodes'].sort()
+        self.results['partitions'] = [part for part in self.nb.partitions]
 
         return self.results
 
@@ -282,7 +287,31 @@ class _SlurmLinter:
             self.results['errors'].append((idx, 'Missing parameter value'))
 
     def _partitionname_line(self, idx, line):
-        pass
+        try:
+            args = line.split()
+            name = args[0].split('=')[1]
+            self.nb.partitions[name].append(idx)
+            node_params = [
+                arg for arg in args if arg.lower().startswith('nodes=')
+            ]
+            if len(node_params) != 1:
+                self.results['errors'].append(
+                    idx, 'Missing or repeated Nodes parameter'
+                )
+            for n_param in node_params:
+                nodelist = n_param.split('=')[1]
+                if not nodelist:
+                    continue
+                if nodelist.lower() == 'all':
+                    self.nb.allnode_partitions.add(name)
+                    continue
+                nodes = expand_hostlist(nodelist)
+                for node in nodes:
+                    self.nb[node].add_partition(name, idx)
+        except Exception:
+            self.results['errors'].append(
+                (idx, 'Syntax Error in PartitionName directive')
+            )
 
 
 class Node:
@@ -333,6 +362,7 @@ class NodeBank(dict):
     def __init__(self):
         super().__init__()
 
+        self.partitions = defaultdict(list)
         self.allnode_partitions = set()
 
     def __missing__(self, key):

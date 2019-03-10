@@ -1,4 +1,4 @@
-# Errors 126,127,128,131
+# there is an ALL partition catching missing nodes
 ClusterName=ringo
 ControlMachine=sched-1,sched-2
 ControlAddr=sched-drbd
@@ -95,7 +95,7 @@ SlurmdLogFile=/var/log/slurm/slurmd.log
 #
 NodeName=cn[201-216] Sockets=2 CoresPerSocket=6 ThreadsPerCore=2 CPUs=12 RealMemory=48114 MemSpecLimit=5120 Weight=1 Feature=westmere
 NodeName=cn[217-238] Sockets=2 CoresPerSocket=4 ThreadsPerCore=2 CPUs=8 RealMemory=128749 MemSpecLimit=5120 Weight=50 Feature=westmere
-NodeName=cn[301-303,305-340,347-380,383-415,417-421,423-448,450-460,464-500] Sockets=2 CoresPerSocket=6 ThreadsPerCore=2 CPUs=12 RealMemory=128714 MemSpecLimit=5120 Weight=30 Feature=sandybridge
+NodeName=cn[301-303,305-340,347-380,383-415,417-421,423-448,450-460,464-500] Sockets=2 CoresPerSocket=6 ThreadsPerCore=2 CPUs=12 RealMemory=128714 MemSpecLimit=5120 Weight=30 Feature=sandybridge # missing part cn371
 NodeName=cn[381-382,422,461-463] Sockets=2 CoresPerSocket=6 ThreadsPerCore=2 CPUs=12 RealMemory=257730 MemSpecLimit=5120 Weight=90 Feature=sandybridge
 NodeName=cn[304,416,449] Sockets=2 CoresPerSocket=6 ThreadsPerCore=2 CPUs=12 RealMemory=96460 MemSpecLimit=5120 Weight=1 Feature=sandybridge
 NodeName=cn[903-905] Sockets=2 CoresPerSocket=8 ThreadsPerCore=2 CPUs=16 RealMemory=128714 MemSpecLimit=5120 Weight=10 Feature=sandybridge
@@ -110,7 +110,7 @@ NodeName=cn[1528-1529] Sockets=2 CoresPerSocket=8 ThreadsPerCore=2 CPUs=16 RealM
 #
 # GPU NODES
 #
-NodeName=gpu[0001-0005,0007-0012] Sockets=2 CoresPerSocket=6 ThreadsPerCore=1 CPUs=12 RealMemory=128644 MemSpecLimit=5120 Gres=gpu:4 Weight=1 Feature=haswell,maxwell
+NodeName=gpu[0001-0005,0007-0012] Sockets=2 CoresPerSocket=6 ThreadsPerCore=1 CPUs=12 RealMemory=128644 MemSpecLimit=5120 Gres=gpu:4 Weight=1 Feature=haswell,maxwell # missing parts gpu0011-12
 NodeName=gpu[0006] Sockets=2 CoresPerSocket=6 ThreadsPerCore=1 CPUs=12 RealMemory=128644 MemSpecLimit=5120 Gres=gpu:4 Weight=100 Feature=haswell,maxwell
 NodeName=gpu[0013-0021] Sockets=2 CoresPerSocket=4 ThreadsPerCore=1 CPUs=8 RealMemory=257657 MemSpecLimit=5120 Gres=gpu:4 Weight=1 Feature=broadwell,pascal,p3584
 NodeName=gpu[0023-0034] Sockets=2 CoresPerSocket=4 ThreadsPerCore=1 CPUs=8 RealMemory=257657 MemSpecLimit=5120 Gres=gpu:4 Weight=1 Feature=broadwell,pascal,p3840
@@ -123,17 +123,17 @@ NodeName=ng[671-673,675-677] Sockets=2 CoresPerSocket=4 ThreadsPerCore=2 CPUs=8 
 NodeName=ng[674] Sockets=2 CoresPerSocket=4 ThreadsPerCore=2 CPUs=8 RealMemory=40055 MemSpecLimit=2048 Weight=1 Feature=nehalem
 NodeName=ng[667-670,678-690] Sockets=2 CoresPerSocket=4 ThreadsPerCore=2 CPUs=8 RealMemory=23928 MemSpecLimit=2048 Weight=1 Feature=nehalem
 NodeName=ng[691-694] Sockets=2 CoresPerSocket=4 ThreadsPerCore=2 CPUs=8 RealMemory=96499 MemSpecLimit=2048 Weight=1 Feature=nehalem
-NodeName=ng[908-910,1001-1031,1032-1040] Sockets=2 CoresPerSocket=4 ThreadsPerCore=2 CPUs=8 RealMemory=23923 MemSpecLimit=2048 Weight=1 Feature=westmere
-NodeName=ng[1031] Sockets=2 CoresPerSocket=4 ThreadsPerCore=2 CPUs=8 RealMemory=19894 MemSpecLimit=2048 Weight=1 Feature=westmere # Duplicate entry for cn1031
-NodeName=ng[908-910,1041-1044,1046-1059] Sockets=2 CoresPerSocket=6 ThreadsPerCore=2 CPUs=12 RealMemory=48114 MemSpecLimit=2048 Weight=1 Feature=westmere # Duplicate entries for ng908-910
+NodeName=ng[908-910,1001-1030,1032-1040] Sockets=2 CoresPerSocket=4 ThreadsPerCore=2 CPUs=8 RealMemory=23923 MemSpecLimit=2048 Weight=1 Feature=westmere
+NodeName=ng[1031] Sockets=2 CoresPerSocket=4 ThreadsPerCore=2 CPUs=8 RealMemory=19894 MemSpecLimit=2048 Weight=1 Feature=westmere
+NodeName=ng[1041-1044,1046-1059] Sockets=2 CoresPerSocket=6 ThreadsPerCore=2 CPUs=12 RealMemory=48114 MemSpecLimit=2048 Weight=1 Feature=westmere
 NodeName=ng[1061-1080] Sockets=2 CoresPerSocket=4 ThreadsPerCore=2 CPUs=8 RealMemory=23923 MemSpecLimit=2048 Weight=1 Feature=westmere 
 NodeName=ng[1097-1100,1102-1120] Sockets=2 CoresPerSocket=6 ThreadsPerCore=2 CPUs=12 RealMemory=64241 MemSpecLimit=2048 Weight=1 Feature=westmere 
-NodeName=ng[1255-1256,1256,1259] Sockets=2 CoresPerSocket=6 ThreadsPerCore=2 CPUs=12 RealMemory=128714 MemSpecLimit=2048 Weight=1 Feature=sandybridge # duplicate nodes 1256 and 1259
+NodeName=ng[1255-1256] Sockets=2 CoresPerSocket=6 ThreadsPerCore=2 CPUs=12 RealMemory=128714 MemSpecLimit=2048 Weight=1 Feature=sandybridge
 #
 # PARTITIONS
 #
 PartitionName=production Nodes=cn[201-238,301-340,347-370,372-500,903-905,911-913,1081-1096,1121-1135,1201-1230,1232-1242,1257-1427,1430-1524,1526-1529] DefaultTime=30 MaxTime=20160 DefMemPerCPU=1024 MaxMemPerCPU=20480 PriorityTier=1 Default=YES DisableRootJobs=YES State=UP
 PartitionName=nogpfs Nodes=ng[239,667-694,908-910,1001-1044,1046-1059,1061-1080,1097-1100,1102-1120,1255-1256] DefaultTime=30 MaxTime=20160 DefMemPerCPU=1024 MaxMemPerCPU=20480 PriorityTier=2 Default=NO DisableRootJobs=YES State=UP QOS=nogpfs
-PartitionName=debug Nodes=cn[371,1101,1231,1525],gpu[0006,0022] QOS=debug DefaultTime=10 DefMemPerCPU=1024 MaxMemPerCPU=20480 PriorityTier=4 Default=NO DisableRootJobs=YES State=UP
-PartitionName=maxwell Nodes=gpu[0001-0012] DefaultTime=30 MaxTime=7200 DefMemPerCPU=1024 MaxMemPerCPU=10200 PriorityTier=3 Default=NO DisableRootJobs=YES State=UP
+PartitionName=debug Nodes=ALL QOS=debug DefaultTime=10 DefMemPerCPU=1024 MaxMemPerCPU=20480 PriorityTier=4 Default=NO DisableRootJobs=YES State=UP
+PartitionName=maxwell Nodes=gpu[0001-0010] DefaultTime=30 MaxTime=7200 DefMemPerCPU=1024 MaxMemPerCPU=10200 PriorityTier=3 Default=NO DisableRootJobs=YES State=UP
 PartitionName=pascal Nodes=gpu[0013-0034] DefaultTime=30 MaxTime=7200 DefMemPerCPU=1024 MaxMemPerCPU=31500 PriorityTier=3 Default=NO DisableRootJobs=YES State=UP
