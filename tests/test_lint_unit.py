@@ -88,3 +88,6 @@ def test_nodebank_node_missing_partition_errors():
         (12, 'Defined node has no partition: cn3, cn5, cn6, ...')
     ]
     assert result == expected
+
+    nb.allnode_partitions.add('qa')
+    assert nb.node_missing_partition_errors() == []
