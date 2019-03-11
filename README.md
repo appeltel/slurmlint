@@ -1,9 +1,42 @@
 ![Travis CI Status](https://travis-ci.org/appeltel/slurmlint.svg?branch=master)
 ![python 3.5, 3.6, 3.7](https://img.shields.io/badge/python-3.5%2C%203.6%2C%203.7-brightgreen.svg)
 
-# slurmlint
+# A Simple linter for Slurm Config Files
 
-Simple linter for Slurm Config Files
+## Purpose
+
+In my experience it is very easy to make small errors in slurm configuration
+files, incorrectly listing nodes in the cluster, or failing to assign nodes
+to partitions, and so on. This package provides a simple command to check
+slurm files that is suitable for use in automated deployment management.
+
+In addition, a python API is provided allowing checking arbitrary strings
+of text. Utility functions such as explanding slurm-style hostname lists
+are also given.
+
+## Usage
+
+The `slurmlint` command takes a slurm configuration file as an argument
+and returns a simple report with errors (if any). If there were errors
+then the return code is 1, otherwise 0.
+
+```
+$ slurmlint slurm.conf
+753 compute nodes configured
+
+Errors detected:
+Line 126 - Duplicate node definition: ng1031, ng908, ng909, ...
+Line 127 - Duplicate node definition: ng1031
+Line 128 - Duplicate node definition: ng908, ng909, ng910
+Line 131 - Defined node has no partition: ng1259
+Line 131 - Duplicate node definition: ng1256
+```
+
+## Limitations
+
+This utility does not fully understand the grammar of slurm configuration
+files and does not guarantee the validity of a configuration file. It only
+serves to help find certain kinds of simple errors. 
 
 ## Hostname Lists
 
