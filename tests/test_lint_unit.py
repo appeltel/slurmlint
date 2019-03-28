@@ -91,3 +91,17 @@ def test_nodebank_node_missing_partition_errors():
 
     nb.allnode_partitions.add('qa')
     assert nb.node_missing_partition_errors() == []
+
+
+def test_slurmlinter_node_property_setting():
+    sl = linter.SlurmLinter()
+    confline = (
+        'NodeName=gpu[0023-0034] Sockets=2 CoresPerSocket=4 ThreadsPerCore=1 '
+        'CPUs=8 RealMemory=257657 MemSpecLimit=5120 Gres=gpu:4 Weight=1 '
+        'Feature=broadwell,pascal,p3840'
+    )
+    sl.lint(confline)
+
+    assert sl.nb['gpu0024'].cpus == 8
+    assert sl.nb['gpu0031'].realmemory == 257657
+    assert sl.nb['gpu0033'].features == {'broadwell', 'pascal', 'p3840'}

@@ -225,13 +225,14 @@ def lint(conf):
     :returns: dict containing list of errors in the configuration
     :rtype: dict
     """
-    linter = _SlurmLinter()
+    linter = SlurmLinter()
     return linter.lint(conf)
 
 
-class _SlurmLinter:
+class SlurmLinter:
     """
-    Lints a slurm file text
+    Lints a slurm file text and keeps track of a bank of configured nodes
+    and their partitions.
     """
     def __init__(self):
         self.results = {'errors': []}
@@ -273,8 +274,24 @@ class _SlurmLinter:
             args = line.split()
             nodelist = args[0].split('=')[1]
             nodes = expand_hostlist(nodelist)
+
+            # Node properties
+            cpus = 1
+            realmemory = 1
+            features = set()
+            for arg in args[1:]:
+                arg = arg.lower()
+                if arg.startswith('cpus='):
+                    cpus = int(arg.strip('cpus='))
+                if arg.startswith('realmemory='):
+                    realmemory = int(arg.strip('realmemory='))
+                if arg.startswith('feature='):
+                    features.update(arg.strip('feature=').split(','))
             for node in nodes:
                 self.nb[node].add_def(idx)
+                self.nb[node].cpus = cpus
+                self.nb[node].realmemory = realmemory
+                self.nb[node].features.update(features)
         except Exception:
             self.results['errors'].append(
                 (idx, 'Syntax Error in NodeName directive')
@@ -324,6 +341,9 @@ class Node:
         self.name = name
         self.deflines = []
         self.partitions = {}
+        self.cpus = 1
+        self.realmemory = 1
+        self.features = set()
 
     def __str__(self):
         return self.name
